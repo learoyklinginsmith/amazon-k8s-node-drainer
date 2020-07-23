@@ -154,7 +154,7 @@ def _lambda_handler(env, k8s_config, k8s_client, event):
         remove_all_pods(v1, node_name)
         
         logger.info('Sleeping')
-        time.sleep(300)
+        time.sleep(450)
         
         logger.info('Call complete lifecycle action')
         asg.complete_lifecycle_action(LifecycleHookName=lifecycle_hook_name,

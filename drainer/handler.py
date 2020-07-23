@@ -146,13 +146,17 @@ def _lambda_handler(env, k8s_config, k8s_client, event):
             logger.error('Node not found.')
             abandon_lifecycle_action(asg, auto_scaling_group_name, lifecycle_hook_name, instance_id)
             return
-
+        
+        logger.info('Call cordon node')
         cordon_node(v1, node_name)
-
+        
+        logger.info('Call remove all pods')
         remove_all_pods(v1, node_name)
         
+        logger.info('Sleeping')
         time.sleep(300)
-
+        
+        logger.info('Call complete lifecycle action')
         asg.complete_lifecycle_action(LifecycleHookName=lifecycle_hook_name,
                                       AutoScalingGroupName=auto_scaling_group_name,
                                       LifecycleActionResult='CONTINUE',

@@ -4,6 +4,7 @@ import logging
 import os.path
 import re
 import yaml
+import time
 
 from botocore.signers import RequestSigner
 import kubernetes as k8s
@@ -149,6 +150,8 @@ def _lambda_handler(env, k8s_config, k8s_client, event):
         cordon_node(v1, node_name)
 
         remove_all_pods(v1, node_name)
+        
+        time.sleep(300)
 
         asg.complete_lifecycle_action(LifecycleHookName=lifecycle_hook_name,
                                       AutoScalingGroupName=auto_scaling_group_name,

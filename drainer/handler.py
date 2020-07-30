@@ -150,6 +150,19 @@ def _lambda_handler(env, k8s_config, k8s_client, event):
         logger.info('Call cordon node')
         cordon_node(v1, node_name)
         
+        logger.info('Adding exclude-balancer label')
+        label_body = {
+            "metadata": {
+                "labels": {
+                    "alpha.service-controller.kubernetes.io/exclude-balancer": "true"}
+            }
+        }
+        try:
+            response_kube = v1.patch_node(node_name, label_body)
+        except Exception as e:
+            print(e)
+            exit(1)
+        
         logger.info('Call remove all pods')
         remove_all_pods(v1, node_name)
         
